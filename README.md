@@ -8,7 +8,7 @@ a makefile for a Curry application.
 
 ## Installing the tool
 
-After installing and checking out the tool by the command
+After checking out the tool by the command
 
     > cpm checkout makefile
 
@@ -16,7 +16,7 @@ go into the root directory of the package and run
 
     > cpm install
 
-This installs the executable `curry-genmake' in the bin directory
+This installs the executable `curry-genmake` in the bin directory
 of CPM.
 
 
