@@ -48,6 +48,6 @@ unwordsUpTo max words = fillWords 0 "" words
   fillWords _ s [] = [s]
   fillWords n s (w:ws) =
     let nw = n + length w
-    in if nw < max
+    in if nw < max || n==0 -- no line break if we are at the line begin
          then fillWords (nw+1) (s ++ (if n==0 then "" else " ") ++ w) ws
          else s : fillWords 0 "" (w:ws)

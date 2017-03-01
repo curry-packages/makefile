@@ -26,12 +26,15 @@ main = do
   generateMakeForApplication (optVerb opts) (unwords argv)
     (stripCurrySuffix (head args)) (optOutput opts) (optTool opts)
 
+version :: String
+version = "Version of 01/03/2017"
+
 -- Banner of this tool:
 banner :: String
 banner = unlines [bannerLine,bannerText,bannerLine]
  where
   bannerText =
-   "curry-createmake: create a makefile for a Curry application (V. 28/02/2017)"
+    "curry-createmake: create makefile for a Curry application ("++version++")"
   bannerLine = take (length bannerText) (repeat '-')
 
 -- Help text
