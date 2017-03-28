@@ -2,12 +2,12 @@
 --- Main module of a tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version February 2017
+--- @version March 2017
 --------------------------------------------------------------------------
 
 module Main where
 
-import Distribution    ( stripCurrySuffix )
+import Distribution    ( installDir, stripCurrySuffix )
 import GetOpt
 import ReadNumeric     (readNat)
 import System          ( exitWith, getArgs )
@@ -24,23 +24,25 @@ main = do
   when (optVerb opts > 0) $ putStr banner 
   when (null args || optHelp opts) (putStrLn usageText >> exitWith 1)
   generateMakeForApplication (optVerb opts) (unwords argv)
-    (stripCurrySuffix (head args)) (optOutput opts) (optTool opts)
+    (stripCurrySuffix (head args)) (optOutput opts)
+    (if null (optRoot opts) then installDir else optRoot opts)
+    (optTool opts)
 
 version :: String
-version = "Version of 01/03/2017"
+version = "Version of 28/03/2017"
 
 -- Banner of this tool:
 banner :: String
 banner = unlines [bannerLine,bannerText,bannerLine]
  where
   bannerText =
-    "curry-createmake: create makefile for a Curry application ("++version++")"
+    "curry-genmake: Generate a makefile for a Curry application ("++version++")"
   bannerLine = take (length bannerText) (repeat '-')
 
 -- Help text
 usageText :: String
 usageText =
-  usageInfo "Usage: curry-createmake [options] <main module name>\n" options
+  usageInfo "Usage: curry-genmake [options] <main module name>\n" options
   
 --------------------------------------------------------------------------
 -- Processing options:
@@ -50,6 +52,7 @@ data Options = Options
   { optHelp     :: Bool
   , optVerb     :: Int
   , optOutput   :: String   -- output file (or empty)
+  , optRoot     :: String   -- root directory of the Curry system
   , optTool     :: String   -- name of the tool binary (or empty)
   }
 
@@ -59,6 +62,7 @@ defaultOptions  = Options
   { optHelp     = False
   , optVerb     = 1
   , optOutput   = ""
+  , optRoot     = ""
   , optTool     = ""
   }
 
@@ -75,6 +79,9 @@ options =
   , Option "o" ["output"]
            (ReqArg (\n opts -> opts { optOutput = n }) "<o>")
            "name of output file (e.g., Makefile)"
+  , Option "r" ["root"]
+           (ReqArg (\n opts -> opts { optRoot = n }) "<r>")
+           "root directory of the Curry system in Makefile"
   , Option "t" ["tool"]
            (ReqArg (\n opts -> opts { optTool = n }) "<t>")
            "name of the tool binary"

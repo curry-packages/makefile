@@ -2,7 +2,7 @@
 --- A tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version February 2017
+--- @version March 2017
 --------------------------------------------------------------------------
 
 module GenerateMakeFile where
@@ -20,9 +20,9 @@ import MakeFile
 
 -- Create a makefile for a given main module:
 generateMakeForApplication :: Int -> String -> String -> String -> String
-                           -> IO ()
-generateMakeForApplication verb args mainmod target tool = do
-  makefile <- generateMakeFile args tool mainmod
+                           -> String -> IO ()
+generateMakeForApplication verb args mainmod target root tool = do
+  makefile <- generateMakeFile args root tool mainmod
   let makefiletext = showMakeFile makefile
   when (null target || verb>1) $ putStr makefiletext
   when (not (null target)) $ do
@@ -35,8 +35,8 @@ generateMakeForApplication verb args mainmod target tool = do
     when (verb>0) $ putStrLn $ "Makefile written to `" ++ target ++ "'"
 
 -- Generate a makefile for a given main module:
-generateMakeFile :: String -> String -> String -> IO MakeFile
-generateMakeFile args tool mainmod = do
+generateMakeFile :: String -> String -> String -> String -> IO MakeFile
+generateMakeFile args root tool mainmod = do
   allints <- readFlatCurryIntWithImports mainmod
   let allmods = (foldl union [mainmod]
                        (map (\ (Prog _ imps _ _ _) -> imps) allints))
@@ -48,19 +48,26 @@ generateMakeFile args tool mainmod = do
                         else intercalate [searchPathSeparator]
                                          (map (simplifyPath curdir)
                                               (splitSearchPath currypath))
-  return $ modToMakeFile args tool mainmod
+  return $ modToMakeFile args root tool mainmod
                          (sort (map (simplifyPath curdir) allsources))
                          simpcurrypath
 
 -- Translate a module with its dependent source files and a (possibly empty)
 -- load path into a makefile:
-modToMakeFile :: String -> String -> String -> [String] -> String -> MakeFile
-modToMakeFile args tool mainmod sourcefiles currypath =
+modToMakeFile :: String -> String -> String -> String -> [String] -> String
+              -> MakeFile
+modToMakeFile args root tool mainmod sourcefiles currypath =
   [ Comment $ "Makefile for main module \""++mainmod++"\""
-  , Comment $ "Created by: curry-createmake " ++ args
+  , Comment $ "Created by: curry-genmake " ++ args
   , Empty
   , Comment "The root directory of the Curry system:"
-  , DefineVariable "CURRYHOME" [installDir]
+  , DefineVariable "CURRYHOME" [root]
+  , Empty
+  , Comment "The executable of the Curry system:"
+  , DefineVariable "REPL"  ["$(CURRYHOME)/bin/curry"]
+  , Empty
+  , Comment "Default options for the Curry system:"
+  , DefineVariable "REPL_OPTS"  [":set -time"]
   , Empty
   , Comment "The directory of the Curry system libraries:"
   , DefineVariable "CURRYLIB"  ["$(CURRYHOME)/lib"]
@@ -71,13 +78,7 @@ modToMakeFile args tool mainmod sourcefiles currypath =
   ifNotNull currypath
     [ Comment "The load path of the application:"
     , DefineVariable "LOADPATH" [currypath], Empty] ++
-  [ Comment "The executable of the Curry system:"
-  , DefineVariable "REPL"  ["$(CURRYHOME)/bin/curry"]
-  , Empty
-  , Comment "Default options for the Curry system:"
-  , DefineVariable "REPL_OPTS"  [":set -time"]
-  , Empty
-  , Comment "Source modules:"
+  [ Comment "Source modules:"
   , DefineVariable "DEPS" sourcefiles
   , Empty
   , Rule [PHONY] "all" ["install"] []
