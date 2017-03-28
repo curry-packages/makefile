@@ -1,6 +1,6 @@
 {
     "name": "makefile",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
     "synopsis": "Library and tool for generating makefiles",
     "dependencies": {
