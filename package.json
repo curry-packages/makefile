@@ -6,10 +6,14 @@
     "category": [ "Programming" ],
     "dependencies": {
     },
+    "compilerCompatibility": {
+        "pakcs": ">= 1.14.0, < 2.0.0",
+        "kics2": ">= 0.5.0, < 2.0.0"
+    },
     "description": "This package contains a library with datatypes to describe the structure of makefiles and a tool to generate a makefile for a Curry application.",
+    "executable": { "name": "curry-genmake" },
     "source": {
       "git": "https://git.ps.informatik.uni-kiel.de/curry-packages/makefile.git",
       "tag": "$version"
-    },
-    "executable": { "name": "curry-genmake" }
+    }
 }
