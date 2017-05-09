@@ -2,7 +2,7 @@
 --- A library containing some data types to describe makefiles.
 ---
 --- @author Michael Hanus
---- @version February 2017
+--- @version May 2017
 -------------------------------------------------------------------------
 
 module MakeFile ( MakeFile, MakeElement(..), SpecialTarget(..)
@@ -23,6 +23,7 @@ data MakeElement = DefineVariable String [String]
 
 --- A data type to describe special targets.
 data SpecialTarget = PHONY | NOTPARALLEL
+  deriving Show
 
 --- Shows a `MakeFile` as a string in standard makefile syntax.
 showMakeFile :: MakeFile -> String

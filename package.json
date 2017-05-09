@@ -1,14 +1,14 @@
 {
     "name": "makefile",
-    "version": "0.0.3",
+    "version": "2.0.0",
     "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
     "synopsis": "Library and tool for generating makefiles",
     "category": [ "Programming" ],
     "dependencies": {
     },
     "compilerCompatibility": {
-        "pakcs": ">= 1.14.0, < 2.0.0",
-        "kics2": ">= 0.5.0, < 2.0.0"
+        "pakcs": ">= 2.0.0",
+        "kics2": ">= 2.0.0"
     },
     "description": "This package contains a library with datatypes to describe the structure of makefiles and a tool to generate a makefile for a Curry application.",
     "executable": { "name": "curry-genmake" },

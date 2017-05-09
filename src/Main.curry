@@ -2,7 +2,7 @@
 --- Main module of a tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version March 2017
+--- @version May 2017
 --------------------------------------------------------------------------
 
 module Main where
@@ -29,7 +29,7 @@ main = do
     (optTool opts)
 
 version :: String
-version = "Version of 28/03/2017"
+version = "Version of 09/05/2017"
 
 -- Banner of this tool:
 banner :: String
