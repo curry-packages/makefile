@@ -7,14 +7,15 @@
 
 module GenerateMakeFile where
 
-import Directory       ( doesFileExist, getCurrentDirectory, renameFile )
-import Distribution    ( installDir, lookupModuleSourceInLoadPath )
-import FilePath        ( (</>), searchPathSeparator, splitSearchPath )
-import FlatCurry.Types ( Prog(..) )
-import FlatCurry.Read  ( readFlatCurryIntWithImports )
-import List            ( intercalate, isPrefixOf, union )
-import Sort            ( sort )
-import System          ( getEnviron )
+import System.Directory   ( doesFileExist, getCurrentDirectory, renameFile )
+import System.FilePath    ( (</>), searchPathSeparator, splitSearchPath)
+import System.Environment ( getEnv )
+import Data.List          ( intercalate, isPrefixOf, union )
+import Sort               ( sort )
+import Distribution       ( installDir, lookupModuleSourceInLoadPath )
+
+import FlatCurry.Types    ( Prog(..) )
+import FlatCurry.Read     ( readFlatCurryIntWithImports )
 
 import MakeFile
 
@@ -41,7 +42,7 @@ generateMakeFile args root tool mainmod = do
   let allmods = (foldl union [mainmod]
                        (map (\ (Prog _ imps _ _ _) -> imps) allints))
   allsources <- mapIO findSourceFileInLoadPath (filter (/="Prelude") allmods)
-  currypath  <- getEnviron "CURRYPATH"
+  currypath  <- getEnv "CURRYPATH"
   curdir     <- getCurrentDirectory
   let simpcurrypath = if null currypath
                         then ""

@@ -8,7 +8,7 @@
 module MakeFile ( MakeFile, MakeElement(..), SpecialTarget(..)
                 , showMakeFile ) where
 
-import List ( intercalate )
+import Data.List ( intercalate )
 
 -------------------------------------------------------------------------
 

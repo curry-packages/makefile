@@ -7,10 +7,11 @@
 
 module Main where
 
-import Distribution    ( installDir, stripCurrySuffix )
-import GetOpt
-import ReadNumeric     (readNat)
-import System          ( exitWith, getArgs )
+import System.Console.GetOpt
+import System.Process     ( exitWith )
+import System.Environment ( getArgs )
+import Distribution       ( installDir, stripCurrySuffix )
+import Numeric            ( readNat )
 
 import GenerateMakeFile
 
@@ -21,7 +22,7 @@ main = do
       opts = foldl (flip id) defaultOptions funopts
   unless (null opterrors || length args /= 1)
          (putStr (unlines opterrors) >> putStrLn usageText >> exitWith 1)
-  when (optVerb opts > 0) $ putStr banner 
+  when (optVerb opts > 0) $ putStr banner
   when (null args || optHelp opts) (putStrLn usageText >> exitWith 1)
   generateMakeForApplication (optVerb opts) (unwords argv)
     (stripCurrySuffix (head args)) (optOutput opts)
@@ -29,7 +30,7 @@ main = do
     (optTool opts)
 
 version :: String
-version = "Version of 09/05/2017"
+version = "Version of 08/09/2018"
 
 -- Banner of this tool:
 banner :: String
@@ -43,7 +44,7 @@ banner = unlines [bannerLine,bannerText,bannerLine]
 usageText :: String
 usageText =
   usageInfo "Usage: curry-genmake [options] <main module name>\n" options
-  
+
 --------------------------------------------------------------------------
 -- Processing options:
 
@@ -87,11 +88,9 @@ options =
            "name of the tool binary"
   ]
  where
-  safeReadNat opttrans s opts =
-   let numError = error "Illegal number argument (try `-h' for help)" in
-    maybe numError
-          (\ (n,rs) -> if null rs then opttrans n opts else numError)
-          (readNat s)
+  safeReadNat opttrans s opts = case readNat s of
+    [(n,"")] -> opttrans n opts
+    _        -> error "Illegal number argument (try `-h' for help)"
 
   checkVerb n opts = if n>=0 && n<3
                      then opts { optVerb = n }
