@@ -2,15 +2,17 @@
 --- Main module of a tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version May 2017
+--- @version December 2018
 --------------------------------------------------------------------------
 
 module Main where
 
-import Distribution    ( installDir, stripCurrySuffix )
+import Distribution     ( installDir )
 import GetOpt
-import ReadNumeric     (readNat)
-import System          ( exitWith, getArgs )
+import ReadNumeric      (readNat)
+import System           ( exitWith, getArgs )
+
+import System.CurryPath ( stripCurrySuffix )
 
 import GenerateMakeFile
 

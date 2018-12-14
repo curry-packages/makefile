@@ -2,19 +2,21 @@
 --- A tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version March 2017
+--- @version December 2018
 --------------------------------------------------------------------------
 
 module GenerateMakeFile where
 
 import Directory       ( doesFileExist, getCurrentDirectory, renameFile )
-import Distribution    ( installDir, lookupModuleSourceInLoadPath )
+import Distribution    ( installDir )
 import FilePath        ( (</>), searchPathSeparator, splitSearchPath )
 import FlatCurry.Types ( Prog(..) )
 import FlatCurry.Read  ( readFlatCurryIntWithImports )
 import List            ( intercalate, isPrefixOf, union )
 import Sort            ( sort )
 import System          ( getEnviron )
+
+import System.CurryPath ( lookupModuleSourceInLoadPath )
 
 import MakeFile
 

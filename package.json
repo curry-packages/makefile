@@ -5,7 +5,9 @@
     "synopsis": "Library and tool for generating makefiles",
     "category": [ "Programming" ],
     "dependencies": {
-        "flatcurry": ">= 2.0.0"
+        "base"      : ">= 1.0.0, < 2.0.0",
+        "currypath" : ">= 0.0.1",
+        "flatcurry" : ">= 2.0.0"
     },
     "compilerCompatibility": {
         "pakcs": ">= 2.0.0",
