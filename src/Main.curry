@@ -7,12 +7,14 @@
 
 module Main where
 
-import Distribution     ( installDir )
-import GetOpt
-import ReadNumeric      (readNat)
-import System           ( exitWith, getArgs )
+import Control.Monad               ( when, unless )
+import Curry.Compiler.Distribution ( installDir )
+import System.Console.GetOpt
+import Numeric               ( readNat )
+import System.Environment    ( getArgs )
 
-import System.CurryPath ( stripCurrySuffix )
+import System.CurryPath      ( stripCurrySuffix )
+import System.Process        ( exitWith )
 
 import GenerateMakeFile
 
@@ -31,14 +33,15 @@ main = do
     (optTool opts)
 
 version :: String
-version = "Version of 09/05/2017"
+version = "Version of 08/12/2020"
 
 -- Banner of this tool:
 banner :: String
-banner = unlines [bannerLine,bannerText,bannerLine]
+banner = unlines [bannerLine, bannerText, bannerLine]
  where
   bannerText =
-    "curry-genmake: Generate a makefile for a Curry application ("++version++")"
+    "curry-genmake: Generate makefile for a Curry application (" ++
+    version ++ ")"
   bannerLine = take (length bannerText) (repeat '-')
 
 -- Help text
@@ -89,15 +92,13 @@ options =
            "name of the tool binary"
   ]
  where
-  safeReadNat opttrans s opts =
-   let numError = error "Illegal number argument (try `-h' for help)" in
-    maybe numError
-          (\ (n,rs) -> if null rs then opttrans n opts else numError)
-          (readNat s)
+  safeReadNat opttrans s opts = case readNat s of
+    [(n,"")] -> opttrans n opts
+    _        -> error "Illegal number argument (try `-h' for help)"
 
   checkVerb n opts = if n>=0 && n<3
-                     then opts { optVerb = n }
-                     else error "Illegal verbosity level (try `-h' for help)"
+                       then opts { optVerb = n }
+                       else error "Illegal verbosity level (try `-h' for help)"
 
 
 --------------------------------------------------------------------------

@@ -8,13 +8,9 @@ a makefile for a Curry application.
 
 ## Installing the tool
 
-After checking out the tool by the command
+Execute
 
-    > cpm checkout makefile
-
-go into the root directory of the package and run
-
-    > cpm install
+    > cypm install make
 
 This installs the executable `curry-genmake` in the bin directory
 of CPM.
@@ -38,4 +34,4 @@ For instance, to generate a makefile for some package managed with CPM,
 one can use the CPM command `cpm exec` inside the package directory,
 e.g.,
 
-    > cpm exec curry-genmake Main
+    > cypm exec curry-genmake Main

@@ -2,21 +2,21 @@
 --- A tool to generate a makefile for a Curry application.
 ---
 --- @author Michael Hanus
---- @version December 2018
+--- @version December 2020
 --------------------------------------------------------------------------
 
 module GenerateMakeFile where
 
-import Directory       ( doesFileExist, getCurrentDirectory, renameFile )
-import Distribution    ( installDir )
-import FilePath        ( (</>), searchPathSeparator, splitSearchPath )
-import FlatCurry.Types ( Prog(..) )
-import FlatCurry.Read  ( readFlatCurryIntWithImports )
-import List            ( intercalate, isPrefixOf, union )
-import Sort            ( sort )
-import System          ( getEnviron )
+import Control.Monad               ( when )
+import Curry.Compiler.Distribution ( installDir )
+import Data.List          ( intercalate, isPrefixOf, union, sort )
+import System.Environment ( getEnv )
 
-import System.CurryPath ( lookupModuleSourceInLoadPath )
+import FlatCurry.Types    ( Prog(..) )
+import FlatCurry.Read     ( readFlatCurryIntWithImports )
+import System.CurryPath   ( lookupModuleSourceInLoadPath )
+import System.Directory   ( doesFileExist, getCurrentDirectory, renameFile )
+import System.FilePath    ( (</>), searchPathSeparator, splitSearchPath )
 
 import MakeFile
 
@@ -42,8 +42,8 @@ generateMakeFile args root tool mainmod = do
   allints <- readFlatCurryIntWithImports mainmod
   let allmods = (foldl union [mainmod]
                        (map (\ (Prog _ imps _ _ _) -> imps) allints))
-  allsources <- mapIO findSourceFileInLoadPath (filter (/="Prelude") allmods)
-  currypath  <- getEnviron "CURRYPATH"
+  allsources <- mapM findSourceFileInLoadPath (filter (/="Prelude") allmods)
+  currypath  <- getEnv "CURRYPATH"
   curdir     <- getCurrentDirectory
   let simpcurrypath = if null currypath
                         then ""

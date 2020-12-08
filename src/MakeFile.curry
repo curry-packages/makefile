@@ -2,13 +2,13 @@
 --- A library containing some data types to describe makefiles.
 ---
 --- @author Michael Hanus
---- @version May 2017
+--- @version December 2020
 -------------------------------------------------------------------------
 
 module MakeFile ( MakeFile, MakeElement(..), SpecialTarget(..)
                 , showMakeFile ) where
 
-import List ( intercalate )
+import Data.List ( intercalate )
 
 -------------------------------------------------------------------------
 
