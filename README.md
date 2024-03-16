@@ -10,7 +10,7 @@ a makefile for a Curry application.
 
 Execute
 
-    > cypm install make
+    > cypm install makefile
 
 This installs the executable `curry-genmake` in the bin directory
 of CPM.
